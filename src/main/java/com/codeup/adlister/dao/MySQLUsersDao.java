@@ -29,14 +29,17 @@ public class MySQLUsersDao implements Users {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-            User user = new User(
-                    rs.getLong("id"),
-                    rs.getString("username"),
-                    rs.getString("email"),
-                    rs.getString("password")
-            );
-            return user;
-
+            if(rs.next()) {
+                User user = new User(
+                        rs.getLong("id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                return user;
+            } else{
+                return null;
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error trying to find user by username", e);
         }
